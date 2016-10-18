@@ -18,8 +18,8 @@ Tmax=0
 
 #Range for the lnK fitting. Usually 0.2 - 0.8 is OK 
 #If not try for example 0.3 to 0.7
-lnKlow=0.3
-lnKhigh=0.7
+lnKlow=0.2
+lnKhigh=0.8
 #######################################
 
 from scipy import constants as const
