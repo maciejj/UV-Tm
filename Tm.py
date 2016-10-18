@@ -121,7 +121,7 @@ def run_for_one_set(Te,Ab,name):
 		plt.clf()
 		plt.plot(1/TEner, lnK, 'o', markersize=2)
 		lnKlin=(1/TEner)*energy_params[0][0]*-1000*const.calorie/const.R + energy_params[0][1]*1000*const.calorie/const.R
-		np.savetxt(sys.argv[1]+'_'+name+'_lnK_fit.out', np.c_[(1/TEner),lnK,lnKlin], fmt='%10.5f')
+		np.savetxt(sys.argv[1]+'_'+name+'_lnK_fit.out', np.c_[(1/TEner),lnK,lnKlin], fmt='%10.8f')
 		plt.plot(1/TEner, lnKlin)
 		plt.savefig('lnK.png')
 		print("Is fiting OK? y/n")
