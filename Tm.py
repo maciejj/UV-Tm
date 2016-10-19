@@ -57,8 +57,8 @@ def run_for_one_set(Te,Ab,name):
 		A = np.array(Ab)
 		#constraing T for analysis
 		if Tlow or Tmax:
-			T = T[(T<Tmax)&(T>Tlow)]
 			A = A[(T<Tmax)&(T>Tlow)]
+			T = T[(T<Tmax)&(T>Tlow)]
 		plt.grid(True)
 		plt.plot(T,A)
 		# Save the figure in a separate file
