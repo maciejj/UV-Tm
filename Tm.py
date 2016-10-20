@@ -12,14 +12,14 @@ reactionType=1
 #concentration in M; needed only when reactionType is not equal to 1
 concentration=0.000002
 
-#Temperature range in C for analyze. Zero values mean, it analyses whole curves
+#Temperature range for analyze. Zero values mean, it analyses whole curve
 Tlow=0
 Tmax=0
 
 #Range for the lnK fitting. Usually 0.2 - 0.8 is OK 
 #If not try for example 0.3 to 0.7
-lnKlow=0.2
-lnKhigh=0.8
+lnKlow=0.4
+lnKhigh=0.6
 #######################################
 
 from scipy import constants as const
@@ -56,9 +56,15 @@ def run_for_one_set(Te,Ab,name):
 		#T = T #+ 273.15
 		A = np.array(Ab)
 		#constraing T for analysis
-		if Tlow or Tmax:
-			A = A[(T<Tmax)&(T>Tlow)]
-			T = T[(T<Tmax)&(T>Tlow)]
+		#if Tlow or Tmax:
+		#	A = A[(T < Tmax)&(T > Tlow)]
+		#	T = T[(T < Tmax)&(T > Tlow)]
+		if Tlow:
+			A = A[(T > Tlow)]
+			T = T[(T > Tlow)]
+		if Tmax:
+			A = A[(T < Tmax)]
+			T = T[(T < Tmax)]
 		plt.grid(True)
 		plt.plot(T,A)
 		# Save the figure in a separate file
@@ -99,9 +105,9 @@ def run_for_one_set(Te,Ab,name):
 		if reactionType == 1:
 			KEner = fEner/(1-fEner)
 		elif reactionType == 2: 
-			KEner = fEner/2*((1-fEner)**2)*concentration
+			KEner = fEner/(2*((1-fEner)**2)*concentration)
 		elif reactionType == 3:
-			KEner = 2*fEner/((1-fEner)**2)*concentration
+			KEner = (fEner)/(((1-fEner)**2)*concentration)
 		lnK = np.log(KEner)
 		#print lnK
 		energy_params = curve_fit(enthalpy_fit, TEner, lnK)
@@ -121,7 +127,7 @@ def run_for_one_set(Te,Ab,name):
 		plt.clf()
 		plt.plot(1/TEner, lnK, 'o', markersize=2)
 		lnKlin=(1/TEner)*energy_params[0][0]*-1000*const.calorie/const.R + energy_params[0][1]*1000*const.calorie/const.R
-		np.savetxt(sys.argv[1]+'_'+name+'_lnK_fit.out', np.c_[(1/TEner),lnK,lnKlin], fmt='%10.8f')
+		np.savetxt(sys.argv[1]+'_'+name+'_lnK_fit.out', np.c_[(1/TEner),lnK,lnKlin], fmt='%10.7f')
 		plt.plot(1/TEner, lnKlin)
 		plt.savefig('lnK.png')
 		print("Is fiting OK? y/n")
