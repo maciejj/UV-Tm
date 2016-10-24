@@ -18,8 +18,8 @@ Tmax=0
 
 #Range for the lnK fitting. Usually 0.2 - 0.8 is OK 
 #If not try for example 0.3 to 0.7
-lnKlow=0.4
-lnKhigh=0.6
+lnKlow=0.2
+lnKhigh=0.8
 #######################################
 
 from scipy import constants as const
@@ -55,10 +55,6 @@ def run_for_one_set(Te,Ab,name):
 		T = np.array(Te)
 		#T = T #+ 273.15
 		A = np.array(Ab)
-		#constraing T for analysis
-		#if Tlow or Tmax:
-		#	A = A[(T < Tmax)&(T > Tlow)]
-		#	T = T[(T < Tmax)&(T > Tlow)]
 		if Tlow:
 			A = A[(T > Tlow)]
 			T = T[(T > Tlow)]
@@ -98,9 +94,14 @@ def run_for_one_set(Te,Ab,name):
 		f2 = 1-f
 		HillsParams = curve_fit(hills_fit, T, f2)
 		#print HillsParams 
+		# preparing f between plateaus
+		lowF = punkty[2] + 0.3*(punkty[3]-punkty[2])
+		topF = punkty[3] - 0.3*(punkty[3]-punkty[2])
+		fEner = f[(T < punkty[2])&(T < punkty[3])]		
+		TEner = T[(T < punkty[2])&(T < punkty[3])]
 		# preparing f in range 0.2 > f < 0.8
-		fEner = f[(lnKlow < f)&(f < lnKhigh)]
-		TEner = T[(lnKlow < f)&(f < lnKhigh)]
+		fEner = (fEner[(lnKlow < fEner)&(fEner < lnKhigh)])
+		TEner = (TEner[(lnKlow < fEner)&(fEner < lnKhigh)])
 		TEner = TEner+273.15
 		if reactionType == 1:
 			KEner = fEner/(1-fEner)
@@ -109,7 +110,8 @@ def run_for_one_set(Te,Ab,name):
 		elif reactionType == 3:
 			KEner = (fEner)/(((1-fEner)**2)*concentration)
 		lnK = np.log(KEner)
-		#print lnK
+		print 1/TEner
+		print lnK
 		energy_params = curve_fit(enthalpy_fit, TEner, lnK)
 		#print energy_params
 		#print energy_params[0][0], energy_params[0][1]*Tenergy, energy_params[0][0]-energy_params[0][1]*Tenergy
@@ -173,7 +175,7 @@ for i in range(len(serie*4)):
 	for j in range(len(per_column[i])):
 		per_column2.append([])
 		try:
-			per_column2[i].append(float(per_column[i][j]))
+			per_column2[i].append(np.float64(per_column[i][j]))
 			#print per_column[i][j]
 		except ValueError:
 			pass
