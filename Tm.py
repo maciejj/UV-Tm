@@ -94,14 +94,19 @@ def run_for_one_set(Te,Ab,name):
 		f2 = 1-f
 		HillsParams = curve_fit(hills_fit, T, f2)
 		#print HillsParams 
-		# preparing f between plateaus
-		lowF = punkty[2] + 0.3*(punkty[3]-punkty[2])
-		topF = punkty[3] - 0.3*(punkty[3]-punkty[2])
-		fEner = f[(T < punkty[2])&(T < punkty[3])]		
-		TEner = T[(T < punkty[2])&(T < punkty[3])]
+		#preparing f between plateaus
+		fEner = f[(T > punkty[1])&(T < punkty[2])]		
+		TEner = T[(T > punkty[1])&(T < punkty[2])]
+		#print TEner
 		# preparing f in range 0.2 > f < 0.8
+		TEner = (TEner[(lnKlow < fEner)&(fEner < lnKhigh)])		
 		fEner = (fEner[(lnKlow < fEner)&(fEner < lnKhigh)])
-		TEner = (TEner[(lnKlow < fEner)&(fEner < lnKhigh)])
+		
+		
+		#TEner = (TEner[(fEner < lnKhigh)])		
+		#fEner = (fEner[(fEner < lnKhigh)])
+		
+		#print TEner
 		TEner = TEner+273.15
 		if reactionType == 1:
 			KEner = fEner/(1-fEner)
@@ -110,8 +115,8 @@ def run_for_one_set(Te,Ab,name):
 		elif reactionType == 3:
 			KEner = (fEner)/(((1-fEner)**2)*concentration)
 		lnK = np.log(KEner)
-		print 1/TEner
-		print lnK
+		#print TEner
+		#print lnK
 		energy_params = curve_fit(enthalpy_fit, TEner, lnK)
 		#print energy_params
 		#print energy_params[0][0], energy_params[0][1]*Tenergy, energy_params[0][0]-energy_params[0][1]*Tenergy
