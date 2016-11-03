@@ -1,7 +1,7 @@
 # UV-Tm
 A tool to analyse UV melting curves from the UV-Vis Nicolet Evolution 300 Spectrophotometer (Thermo Scientific) saved as ascii files.
-
-Works on Ubuntu 16.04
+For details see Tm-slides.pdf file.
+Script works on Ubuntu 16.04
 
 Use:
 python Tm.py exampleRNA.txt
