@@ -3,7 +3,7 @@
 ########################################
 #Adjustable parameters:
 #Temperature in C for energy analysis:
-Tenergy = 20
+Tenergy = 21
 
 #Reaction type
 #monomolecular=1; bimolecular(selfcomplementary)=2; bimolecular(non-self-complementary)=3
@@ -169,9 +169,8 @@ print 'Found ' + str(len(serie)) + ' series of measurements containing ' + str(l
 if len(dl_fali) == 1:
 	choice = raw_input('Press a number to choose what to analyze: \n ALL:    1 \n heating only: 2 \n')
 elif len(dl_fali) == 2:
-	choice = raw_input('Press a number to choose what to analyze: \n ALL:    1 \n '+str(dl_fali[0])+' heating: 4 \n'+str(dl_fali)+' heating: 2 \n')
+	choice = raw_input('Press a number to choose what to analyze: \n ALL:    1 \n '+str(dl_fali[1])+' heating: 2 \n'+str(dl_fali[0])+' heating: 3 \n')
 
-#choice = 1
 
 #zmiana wartosci na floaty i pozbycie sie pustych elementow
 per_column2 = []
@@ -187,14 +186,31 @@ for i in range(len(serie*4)):
 per_column = per_column2
 
 #run
-step = 4*int(choice)
+choice = int(choice)
+if ((len(dl_fali) == 1) and ((choice ==1) or (choice==2))):
+        step = 4*int(choice)
+        startat = 1
+
+if len(dl_fali) == 2:
+        if choice ==1:
+                step = 4*int(choice)
+                startat = 1
+
+        elif choice == 2:
+                step = 16
+                startat = 1
+        
+        elif choice == 3:
+                step = 16
+                startat = 5
+
 Results = []
 wartTm = []
 wartHill = []
 wartH = []
 wartTdS = []
 wartG = []
-for d in range(1, len(per_row[cycle_line]), step):
+for d in range(startat, len(per_row[cycle_line]), step):
 #for d in range(1, 17, step):
 	Results.append(run_for_one_set(per_column[d], per_column[d+1], per_row[cycle_line][d]))
 	wartTm.append(Results[-1][0])
